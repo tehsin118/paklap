@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./Login.scss";
+import "./login.scss";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from "../../config/firebase-config";
 import { Link, useNavigate } from "react-router-dom";
@@ -9,17 +9,6 @@ const Login = () => {
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       setUserExists(true);
-  //     } else {
-  //       setUserExists(false);
-  //     }
-  //   });
-  //   return unsubscribe;
-  // }, []);
 
   const login = async () => {
     if (loginEmail == "" || loginPassword == "") {
