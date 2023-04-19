@@ -3,19 +3,20 @@ import Home from "./components/home/Home";
 import Login from "./components/logins/login";
 import Signup from "./components/logins/signup";
 import Profile from "./components/profile/profile";
+import Users from "./components/user/Users";
+import Navbar from "./components/navbar/Navbar";
 
 function App() {
   return (
     <div className="App">
+      <Navbar />
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
+        <Route path="/account" element={<Profile />} />
+        <Route path="/allUser" element={<Users />} />
       </Routes>
-      {/* <Signup /> */}
-      {/* <Login /> */}
-      {/* <Home /> */}
     </div>
   );
 }

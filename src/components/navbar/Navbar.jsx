@@ -1,13 +1,35 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./navbar.scss";
+import { Link } from "react-router-dom";
+import { auth } from "../../config/firebase-config";
 const Navbar = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const checkUser = auth.onAuthStateChanged((user) => {
+      if (user == null) {
+        navigate("/login");
+      }
+      if (user) {
+        const email = user.email;
+
+        setUser(user.email);
+      } else {
+        console.log("user signed out");
+      }
+    });
+    return checkUser;
+  }, []);
+  const handleLogout = () => {
+    auth.signOut();
+  };
   return (
     <div>
       <nav class="navbar navbar-expand-lg  laptop-navbar">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
+        <div class="container-fluid ">
+          <Link class="navbar-brand" to="/">
             OctaLap
-          </a>
+          </Link>
           <button
             class="navbar-toggler"
             type="button"
@@ -19,17 +41,21 @@ const Navbar = () => {
           >
             <span class="navbar-toggler-icon"></span>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <div
+            class="collapse navbar-collapse d-flex align-items-center justify-content-center    "
+            id="navbarSupportedContent"
+          >
+            <h3>{user && user.split("@")[0]}</h3>
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
+                <Link class="nav-link active" aria-current="page" to="/">
                   Home
-                </a>
+                </Link>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Link
-                </a>
+                <Link class="nav-link" to="/allUser">
+                  Users
+                </Link>
               </li>
               <li class="nav-item dropdown">
                 <a
@@ -43,15 +69,22 @@ const Navbar = () => {
                 </a>
                 <ul class="dropdown-menu">
                   <li>
-                    <a class="dropdown-item" href="#">
-                      Action
-                    </a>
+                    <a class="dropdown-item">Action</a>
                   </li>
-                  <li>
-                    <a class="dropdown-item" href="#">
-                      Another action
-                    </a>
-                  </li>
+
+                  {user ? (
+                    <li className=" c-pointer">
+                      <button class="dropdown-item" onClick={handleLogout}>
+                        Log out
+                      </button>
+                    </li>
+                  ) : (
+                    <li>
+                      <Link class="dropdown-item" to="/login">
+                        Login
+                      </Link>
+                    </li>
+                  )}
                   <li>
                     <hr class="dropdown-divider" />
                   </li>
@@ -63,7 +96,9 @@ const Navbar = () => {
                 </ul>
               </li>
               <li class="nav-item">
-                <a class="nav-link ">Profile</a>
+                <Link class="nav-link " to="/account">
+                  Account
+                </Link>
               </li>
             </ul>
           </div>

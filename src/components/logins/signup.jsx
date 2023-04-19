@@ -22,7 +22,7 @@ const Signup = () => {
       saveuser();
       setRegisterEmail("");
       setRegisterPassword("");
-      navigate("/");
+      navigate("/login");
     } catch (error) {
       console.log("Email or password wrong" + error.message);
       toast("Already Registered");

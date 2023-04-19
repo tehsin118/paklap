@@ -23,7 +23,7 @@ const Login = () => {
         toast("Email or password login");
         setLoginEmail("");
         setLoginPassword("");
-        navigate("/profile");
+        navigate("/");
       } catch (error) {
         toast("Email or password wrong");
         console.log("Email or password wrong" + error.message);

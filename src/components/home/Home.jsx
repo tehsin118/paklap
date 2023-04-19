@@ -7,54 +7,52 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
 
 const Home = () => {
-  const [user, setUser] = useState({});
-  const [userName, setUserName] = useState("");
+  const [user, setUser] = useState();
   const navigate = useNavigate();
-
-  onAuthStateChanged(auth, (currentUser) => {
-    setUser(currentUser);
-  });
-
-  function UpdateUserName() {
-    updateProfile(auth.currentUser, {
-      displayName: "hello",
-    })
-      .then((res) => {
-        console.log(auth.currentUser);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
 
   const logout = async () => {
     await signOut(auth);
     console.log("user logged out");
     navigate("/");
   };
+
   useEffect(() => {
-    console.log(auth.currentUser);
+    const checkUser = auth.onAuthStateChanged((user) => {
+      if (user == null) {
+        navigate("/login");
+      }
+      if (user) {
+        const uid = user.uid;
+        const email = user.email;
+
+        setUser(user.email);
+      } else {
+        console.log("user signed out");
+      }
+    });
+    return checkUser;
   }, []);
 
   return (
     <div>
       <section className="home-page">
-        <Navbar />
-        <h3>Home page</h3>
-        <h3>{user.displayName}</h3>
-
-        <input
-          type="email"
-          placeholder="Email...."
-          value={userName}
-          onChange={(e) => {
-            setUserName(e.target.value);
-          }}
-        />
-
-        <button onClick={UpdateUserName}>update name</button>
-        <div className="inp">
-          <button onClick={logout}>logout</button>
+        <h3>Welcome: {user && user.split("@")[0]}</h3>
+        <div className="lap-products">
+          <div className="product-card">
+            <div className="card-header">
+              <img src="\assets\images\card1.png" alt="" />
+            </div>
+            <div className="card-details">
+              <div>
+                <h6>lenovo t450</h6>
+                <h6>
+                  Price: <span>81000</span>
+                </h6>
+              </div>
+              <h6>type: used</h6>
+              <button>Add to Cart</button>
+            </div>
+          </div>
         </div>
       </section>
     </div>
