@@ -3,14 +3,30 @@ import React, { useState, useEffect } from "react";
 import "./profile.scss";
 import Navbar from "../navbar/Navbar";
 import { db, auth } from "../../config/firebase-config";
-import { onAuthStateChanged, signOut, updateProfile } from "firebase/auth";
-import { collection, doc } from "firebase/firestore";
+import {
+  onAuthStateChanged,
+  updateEmail,
+  signOut,
+  updateProfile,
+} from "firebase/auth";
+import {
+  doc,
+  setDoc,
+  query,
+  where,
+  getDoc,
+  collection,
+  getDocs,
+} from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
   const [userName, setUserName] = useState("");
   const [userMail, setUserMail] = useState("");
   const [userPhone, setUserPhone] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     const checkUser = auth.onAuthStateChanged((user) => {
@@ -28,23 +44,38 @@ const Profile = () => {
     return checkUser;
   }, []);
 
-  const userRef = db.collection("users").doc(auth.currentUser.uid);
-  const updateUser = () => {
-    userRef
-      .set({
-        name: userName,
-        email: userMail,
-        phone: userPhone,
-      })
-      .then(() => {
-        alert("User Data update successfully");
-      })
-      .catch((error) => {
-        alert("Data Update failed:", error);
-      });
+  const updateUser = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const q = query(
+          collection(db, "users"),
+          where("Useremail", "==", user.email)
+        );
+        const querySnapshot = await getDocs(q);
+        querySnapshot.forEach((doc) => {
+          setDoc(
+            doc.ref,
+            {
+              Name: userName,
+              Useremail: userMail,
+              Phone: userPhone,
+            },
+            { merge: true }
+          );
+          // toast.done("User Data Updated");
+          console.log("user data update");
+        });
+      } else {
+        navigate("/login");
+      }
+    } catch (error) {
+      console.log("data update error:", error);
+    }
   };
   return (
     <div>
+      <Navbar />
       <section className="profile">
         <div className="profile-head">
           <h3>Profile</h3>
@@ -60,15 +91,18 @@ const Profile = () => {
         <div className="user-detail">
           <div>
             <h6>Name:</h6>
-            <input type="text" onClick={(e) => setUserName(e.target.value)} />
+            <input type="text" onChange={(e) => setUserName(e.target.value)} />
           </div>
           <div>
             <h6>Email:</h6>
-            <input type="email" onClick={(e) => setUserMail(e.target.value)} />
+            <input type="email" onChange={(e) => setUserMail(e.target.value)} />
           </div>
           <div>
             <h6>Phone No:</h6>
-            <input type="phone" onClick={(e) => setUserPhone(e.target.value)} />
+            <input
+              type="phone"
+              onChange={(e) => setUserPhone(e.target.value)}
+            />
           </div>
           <div>
             <button onClick={updateUser}>Save</button>
@@ -87,7 +121,8 @@ const Profile = () => {
 };
 
 export default Profile;
-<div className="user-detail">
+
+/* <div className="user-detail">
   <div>
     <h6>Product Name:</h6>
     <input type="text" />
@@ -121,4 +156,4 @@ export default Profile;
   <div>
     <button>Save</button>
   </div>
-</div>;
+</div>; */

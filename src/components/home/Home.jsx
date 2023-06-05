@@ -35,6 +35,7 @@ const Home = () => {
 
   return (
     <div>
+      <Navbar />
       <section className="home-page">
         <h3>Welcome: {user && user.split("@")[0]}</h3>
         <div className="lap-products">

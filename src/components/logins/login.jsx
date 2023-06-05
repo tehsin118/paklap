@@ -12,7 +12,7 @@ const Login = () => {
 
   const login = async () => {
     if (loginEmail == "" || loginPassword == "") {
-      alert("Fields are empty");
+      toast.error("Fields are empty");
     } else {
       try {
         const userCredential = await signInWithEmailAndPassword(
@@ -20,7 +20,6 @@ const Login = () => {
           loginEmail,
           loginPassword
         );
-        toast("Email or password login");
         setLoginEmail("");
         setLoginPassword("");
         navigate("/");
@@ -46,7 +45,7 @@ const Login = () => {
             }}
           />
           <input
-            type="pasword"
+            type="password"
             placeholder="Password...."
             value={loginPassword}
             onChange={(e) => {

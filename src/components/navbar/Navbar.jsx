@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./navbar.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { auth } from "../../config/firebase-config";
 const Navbar = () => {
   const [user, setUser] = useState(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     const checkUser = auth.onAuthStateChanged((user) => {
       if (user == null) {

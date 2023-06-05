@@ -25,7 +25,6 @@ const Signup = () => {
       navigate("/login");
     } catch (error) {
       console.log("Email or password wrong" + error.message);
-      toast("Already Registered");
     }
   };
 
@@ -51,6 +50,7 @@ const Signup = () => {
             type="email"
             placeholder="Email...."
             value={registerEmail}
+            required
             onChange={(e) => {
               setRegisterEmail(e.target.value);
             }}
